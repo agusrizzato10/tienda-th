@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Panel de administración - The Home">
+  <title>Administración | The Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilos.css">
+  <link rel="shortcut icon" href="img/logo.delsitio.png" type="image/x-icon">
+  <script src="admin.js" defer></script>
+</head>
+<body>
+
+  <header class="header-admin">
+    <a href="index.html" class="logo"><img src="img/logo.delsitio.png" alt="Logo de la tienda"></a>
+    <nav id="menu">
+      <a href="index.html">Ver Tienda</a>
+      <a href="admin.html" style="color: var(--rosa-oscuro); font-weight: 600;">Panel Admin</a>
+    </nav>
+    <div class="acciones">
+      <button id="btnSalir" class="icono" hidden style="font-size: 1rem;">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <main style="max-width: 1200px; padding: 40px 20px;">
+    <!-- Pantalla de ingreso: sin la clave no se puede modificar nada -->
+    <section id="pantallaLogin" style="max-width: 420px; margin: 40px auto; background-color: var(--beige); padding: 28px; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.08);">
+      <h3 style="margin-top: 0; color: var(--rosa-oscuro);">Ingresar</h3>
+      <form id="formLogin">
+        <label for="clave" style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Clave de administrador</label>
+        <input type="password" id="clave" required style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white; margin-bottom: 16px;">
+        <button type="submit" class="btn">Ingresar</button>
+      </form>
+    </section>
+
+    <div id="panelAdmin" hidden>
+    <h2>Panel de Administración de Productos</h2>
+    <p style="text-align: center; color: #777; margin-bottom: 30px;">Cargá, editá o eliminá productos de la base de datos.</p>
+
+    <!-- Formulario Arriba -->
+    <section style="background-color: var(--beige); padding: 28px; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.08); margin-bottom: 40px;">
+      <h3 id="formTitulo" style="margin-top: 0; color: var(--rosa-oscuro);">Nuevo Producto</h3>
+      <form id="formProducto" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; align-items: end;">
+        <input type="hidden" id="idProducto">
+        <input type="hidden" id="imagenActual">
+        <input type="hidden" id="imagen2Actual">
+        <input type="hidden" id="imagen3Actual">
+
+        <div>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Nombre / Descripción</label>
+          <input type="text" id="nombre" required style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white;">
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Categoría</label>
+          <select id="categoria" required style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white; font-family: inherit;">
+            <option value="">Seleccioná una categoría...</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Precio ($)</label>
+          <input type="number" step="0.01" id="precio" required style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white;">
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Foto del producto</label>
+          <input type="file" id="imagenFile" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white; font-size: 0.85rem;">
+          <small id="avisoImagen" style="display: block; margin-top: 4px; color: #777; font-size: 0.8rem;"></small>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Cantidad de fotos</label>
+          <select id="cantidadFotos" style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white; font-family: inherit;">
+            <option value="1">1 foto</option>
+            <option value="2">2 fotos (principal y secundaria)</option>
+            <option value="3">3 fotos (principal, secundaria y tercera)</option>
+          </select>
+        </div>
+
+        <!-- La foto secundaria se ve en la página del producto al deslizar la principal -->
+        <div class="grupo-foto2" hidden>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Foto secundaria</label>
+          <input type="file" id="imagenFile2" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white; font-size: 0.85rem;">
+          <small id="avisoImagen2" style="display: block; margin-top: 4px; color: #777; font-size: 0.8rem;"></small>
+        </div>
+
+        <div class="grupo-foto3" hidden>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Tercera foto</label>
+          <input type="file" id="imagenFile3" accept="image/*" style="width: 100%; padding: 8px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white; font-size: 0.85rem;">
+          <small id="avisoImagen3" style="display: block; margin-top: 4px; color: #777; font-size: 0.8rem;"></small>
+        </div>
+
+        <div>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Tipo de producto</label>
+          <select id="tipoProducto" style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white; font-family: inherit;">
+            <option value="comun">Con medidas y material</option>
+            <option value="aroma">Home spray (fragancia y cantidad)</option>
+          </select>
+        </div>
+
+        <div class="grupo-medidas">
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Medidas (opcional)</label>
+          <input type="text" id="medidas" placeholder="ej: 20 x 30 cm" style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white;">
+        </div>
+
+        <div class="grupo-medidas">
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Material (opcional)</label>
+          <input type="text" id="material" placeholder="ej: Cerámica / Madera" style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white;">
+        </div>
+
+        <!-- Estos dos campos se ven solo cuando el tipo de producto es Home spray -->
+        <div class="grupo-aroma" hidden>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Fragancia (opcional)</label>
+          <input type="text" id="fragancia" placeholder="ej: Lavanda" style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white;">
+        </div>
+
+        <div class="grupo-aroma" hidden>
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Cantidad (opcional)</label>
+          <input type="text" id="cantidad" placeholder="ej: 250 ml" style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white;">
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label style="display: block; font-size: 0.9rem; font-weight: 500; margin-bottom: 4px;">Descripción del producto (opcional)</label>
+          <textarea id="detalle" rows="4" maxlength="2000" placeholder="Contá cómo es el producto, para qué sirve, cómo se cuida..." style="width: 100%; padding: 10px; border: 1px solid var(--rosa); border-radius: 6px; outline: none; background: white; font-family: inherit; font-size: 1rem; resize: vertical;"></textarea>
+        </div>
+
+        <div style="grid-column: 1 / -1; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="agotado" style="width: 18px; height: 18px; accent-color: var(--rosa-oscuro);">
+          <label for="agotado" style="font-size: 0.95rem; font-weight: 500; cursor: pointer;">Producto agotado (sin stock)</label>
+        </div>
+
+        <div style="grid-column: 1 / -1; display: flex; gap: 12px; margin-top: 10px;">
+          <button type="submit" class="btn" id="btnGuardar">Guardar Producto</button>
+          <button type="button" id="btnCancelar" class="btn oculto" style="background-color: #777;">Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Listado Abajo Ordenado por Categorías -->
+    <section style="background: white; border: 1px solid var(--beige); border-radius: 8px; padding: 24px; box-shadow: 0 4px 14px rgba(0,0,0,.05);">
+      <h3 style="margin-top: 0; color: var(--rosa-oscuro);">Productos Cargados (Ordenados por Categoría)</h3>
+      <div id="contenedorCategoriasAdmin">
+        <!-- Se llena dinámicamente agrupado por categoría -->
+      </div>
+    </section>
+
+    </div>
+  </main>
+
+  <footer id="contacto" style="margin-top: 60px;">
+    <p class="copyright">© 2026 The Home. Panel de Administración.</p>
+  </footer>
+
+</body>
+</html>
